@@ -1,0 +1,67 @@
+<div class="card card-float p-3 mb-3">
+  <h5 class="mb-3">Buka Share Link TeraBox</h5>
+  <div class="row g-2">
+    <div class="col-12 col-md-9">
+      <input id="shareInput" class="form-control form-control-lg" placeholder="https://terabox.com/s/xxxx">
+    </div>
+    <div class="col-12 col-md-3 d-grid">
+      <button id="btnLoad" class="btn btn-primary btn-lg glow">Load</button>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/ads_top') %>
+
+<div id="result" class="grid">
+  <% for (let i=0;i<8;i++){ %>
+    <div class="card p-2 fade-in">
+      <div class="video-thumb skeleton"></div>
+      <div class="mt-2 skeleton" style="height:14px;width:80%"></div>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/ads_bottom') %>
+
+<script>
+async function loadList(url){
+  const wrap = document.getElementById('result');
+  wrap.innerHTML = Array.from({length:8}).map(()=>`
+    <div class="card p-2 fade-in">
+      <div class="video-thumb skeleton"></div>
+      <div class="mt-2 skeleton" style="height:14px;width:80%"></div>
+    </div>`).join('');
+  try{
+    const r = await fetch('/api/list?url=' + encodeURIComponent(url));
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.message || 'Gagal load');
+
+    const items = [];
+    (function walk(arr){
+      (arr||[]).forEach(x=>{
+        if(x.is_dir) walk(x.list||[]);
+        else if(x.type==='video') items.push(x);
+      });
+    })(j.list || []);
+
+    wrap.innerHTML = items.length ? items.map(v => `
+      <div class="card p-2 pop">
+        <div class="video-thumb">
+          ${v.image ? `<img src="${v.image}" class="thumb-img">` : `<div class="skeleton" style="width:100%;height:100%"></div>`}
+        </div>
+        <div class="mt-2 small fw-semibold text-truncate" title="${v.name}">${v.name}</div>
+        <a class="btn btn-sm btn-outline-primary mt-2" href="/player?shareid=${j.shareid}&uk=${j.uk}&fs_id=${v.fs_id}&sign=${j.sign}&timestamp=${j.timestamp}">
+          <i class="bi bi-play-circle"></i> Play
+        </a>
+      </div>
+    `).join('') : `<div class="col-12"><div class="alert alert-warning">Tidak ada video.</div></div>`;
+  }catch(e){
+    wrap.innerHTML = `<div class="col-12"><div class="alert alert-danger">Error: ${e.message}</div></div>`;
+  }
+}
+document.getElementById('btnLoad').addEventListener('click', ()=>{
+  const v = document.getElementById('shareInput').value.trim();
+  if(!v) return Swal.fire('Oops','Masukkan link share','warning');
+  loadList(v);
+});
+</script>
