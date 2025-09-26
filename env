@@ -1,0 +1,22 @@
+PORT=3000
+SESSION_SECRET=supersecret-change-this
+
+# MySQL
+DB_DIALECT=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=terabox_stream
+DB_USER=root
+DB_PASS=your_mysql_password
+
+# Admin awal
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=admin123
+
+# Default setting (bisa diubah di admin)
+DEFAULT_TB_COOKIE=
+DEFAULT_WORKER_BASE=https://terabox.hnn.workers.dev
+
+# Cache
+CACHE_DIR=./cache
+CACHE_TTL_HOURS=6
