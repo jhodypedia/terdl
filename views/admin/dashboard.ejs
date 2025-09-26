@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3>Dashboard</h3>
+  <div>
+    <a class="btn btn-sm btn-outline-primary" href="/admin/settings">Settings</a>
+    <a class="btn btn-sm btn-outline-secondary" href="/admin/cache">Cache Manager</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <h5 class="mb-2">Ubah Password</h5>
+      <form id="pwdForm">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="mb-2"><input name="current" type="password" class="form-control" placeholder="Password sekarang"></div>
+        <div class="mb-2"><input name="newpass" type="password" class="form-control" placeholder="Password baru (min 6)"></div>
+        <button class="btn btn-warning">Update</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card p-3">
+      <h5 class="mb-2">Quick Test</h5>
+      <div class="input-group">
+        <input id="quickUrl" class="form-control" placeholder="Share link TeraBox">
+        <button id="btnQuick" class="btn btn-success">Get List</button>
+      </div>
+      <pre id="quickOut" class="small mt-2"></pre>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('pwdForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fm = new FormData(e.target);
+  const r = await fetch('/admin/change-password', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ current: fm.get('current'), newpass: fm.get('newpass') })
+  });
+  const j = await r.json();
+  if(j.error) return Swal.fire('Error', j.error, 'error');
+  Swal.fire({toast:true,position:'top-end',timer:1200,icon:'success',title:'Password diubah',showConfirmButton:false});
+});
+
+document.getElementById('btnQuick').addEventListener('click', async ()=>{
+  const u = document.getElementById('quickUrl').value.trim();
+  const r = await fetch('/api/list?url='+encodeURIComponent(u));
+  const j = await r.json();
+  document.getElementById('quickOut').textContent = JSON.stringify(j,null,2);
+});
+</script>
