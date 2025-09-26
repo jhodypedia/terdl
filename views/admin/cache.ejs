@@ -1,0 +1,47 @@
+<h3 class="mb-3">Cache Manager</h3>
+<div class="table-responsive card p-2">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th>FS ID / File</th>
+        <th class="text-end">Ukuran</th>
+        <th>Tersimpan</th>
+        <th>Status</th>
+        <th class="text-end">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!list.length) { %>
+        <tr><td colspan="5" class="text-center text-muted">Cache kosong</td></tr>
+      <% } %>
+      <% list.forEach(f => { %>
+        <tr class="fade-in">
+          <td><code><%= f.fs_id %></code><br><small class="text-muted"><%= f.name %></small></td>
+          <td class="text-end"><%= (f.size/1024/1024).toFixed(2) %> MB</td>
+          <td><%= f.mtime.toLocaleString() %></td>
+          <td>
+            <% if (f.expired) { %><span class="badge bg-danger">Expired</span><% } else { %><span class="badge bg-success">Active</span><% } %>
+          </td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-danger" onclick="del('<%= f.fs_id %>')"><i class="bi bi-trash"></i> Hapus</button>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<script>
+async function del(fs_id){
+  const ask = await Swal.fire({title:'Hapus?',text:fs_id,icon:'warning',showCancelButton:true,confirmButtonText:'Ya, hapus'});
+  if(!ask.isConfirmed) return;
+  const r = await fetch('/admin/cache/delete/'+fs_id, { method:'POST' });
+  const j = await r.json();
+  if(j.ok){
+    Swal.fire({toast:true,position:'top-end',timer:1200,icon:'success',title:'Terhapus',showConfirmButton:false});
+    setTimeout(()=>location.reload(),600);
+  }else{
+    Swal.fire('Gagal','Tidak bisa menghapus','error');
+  }
+}
+</script>
