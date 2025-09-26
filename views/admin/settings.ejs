@@ -1,0 +1,44 @@
+<h3 class="mb-3">Settings</h3>
+<form method="post" action="/admin/settings" class="fade-in">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card p-3">
+        <div class="mb-2">
+          <label class="form-label">Site Name</label>
+          <input class="form-control" name="SITE_NAME" value="<%= s.SITE_NAME||'' %>">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Theme</label>
+          <select class="form-select" name="THEME">
+            <option value="auto" <%= s.THEME==='auto'?'selected':'' %>>Auto</option>
+            <option value="light" <%= s.THEME==='light'?'selected':'' %>>Light</option>
+            <option value="dark"  <%= s.THEME==='dark'?'selected':'' %>>Dark</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Worker Base</label>
+          <input class="form-control" name="WORKER_BASE" value="<%= s.WORKER_BASE||'' %>">
+        </div>
+        <div class="mb-2">
+          <label class="form-label">TeraBox Cookie</label>
+          <textarea class="form-control" rows="3" name="TERABOX_COOKIE"><%= s.TERABOX_COOKIE||'' %></textarea>
+          <small class="text-muted">Paste cookie raw dari browser saat login TeraBox.</small>
+        </div>
+        <button class="btn btn-primary mt-2 glow">Simpan</button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card p-3">
+        <div class="mb-2">
+          <label class="form-label">AdSense Snippet</label>
+          <textarea class="form-control" rows="6" name="ADSENSE_SNIPPET"><%= s.ADSENSE_SNIPPET||'' %></textarea>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Adsterra Snippet</label>
+          <textarea class="form-control" rows="6" name="ADSTERRA_SNIPPET"><%= s.ADSTERRA_SNIPPET||'' %></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
