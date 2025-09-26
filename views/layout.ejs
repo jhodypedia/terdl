@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="id" data-theme="<%= settings.THEME %>">
+<head>
+  <meta charset="utf-8">
+  <title><%= title || settings.SITE_NAME %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Plyr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.css" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <link href="/public/css/style.css" rel="stylesheet">
+</head>
+<body class="bg-body">
+  <nav class="navbar navbar-expand-lg navbar-glass sticky-top">
+    <div class="container-fluid">
+      <button class="btn btn-ghost me-2" data-bs-toggle="offcanvas" data-bs-target="#sidebar"><i class="bi bi-list"></i></button>
+      <a class="navbar-brand fw-semibold" href="/"><%= settings.SITE_NAME %></a>
+      <div class="ms-auto d-flex align-items-center gap-2">
+        <select id="themeSelect" class="form-select form-select-sm w-auto">
+          <option value="auto" <%= settings.THEME==='auto'?'selected':'' %>>Auto</option>
+          <option value="light" <%= settings.THEME==='light'?'selected':'' %>>Light</option>
+          <option value="dark"  <%= settings.THEME==='dark'?'selected':'' %>>Dark</option>
+        </select>
+        <% if (user) { %>
+          <a class="btn btn-sm btn-outline-primary" href="/admin">Admin</a>
+          <a class="btn btn-sm btn-outline-danger" href="/admin/logout">Logout</a>
+        <% } else { %>
+          <a class="btn btn-sm btn-primary" href="/admin/login">Login</a>
+        <% } %>
+      </div>
+    </div>
+  </nav>
+
+  <div class="offcanvas offcanvas-start" id="sidebar">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Menu</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="list-unstyled">
+        <li><a class="d-block py-2" href="/">Beranda</a></li>
+        <li><a class="d-block py-2" href="/admin">Admin</a></li>
+      </ul>
+      <hr>
+      <div class="small text-muted">© <%= new Date().getFullYear() %> <%= settings.SITE_NAME %></div>
+    </div>
+  </div>
+
+  <main class="container py-3">
+    <%- body %>
+  </main>
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Plyr -->
+  <script src="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.polyfilled.min.js"></script>
+
+  <script src="/public/js/main.js"></script>
+</body>
+</html>
