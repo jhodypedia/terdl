@@ -1,0 +1,22 @@
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card p-2 card-float">
+      <video id="plyr" playsinline controls crossorigin="anonymous">
+        <source src="/api/proxy/stream?<%= new URLSearchParams(req.query).toString() %>" type="video/mp4">
+      </video>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card p-3 mb-3">
+      <h6 class="mb-2">Adsense</h6>
+      <%- settings.ADSENSE_SNIPPET || '' %>
+    </div>
+    <div class="card p-3">
+      <h6 class="mb-2">Adsterra</h6>
+      <%- settings.ADSTERRA_SNIPPET || '' %>
+    </div>
+  </div>
+</div>
+<script>
+  const player = new Plyr('#plyr', { ratio: '16:9' });
+</script>
